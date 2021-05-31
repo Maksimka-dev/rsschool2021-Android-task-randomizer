@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FirstFragmentSender, SecondFragmentSender {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -17,13 +17,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openFirstFragment(int previousNumber) {
-        final Fragment firstFragment = FirstFragment.newInstance(previousNumber);
+        final Fragment firstFragment = FirstFragment.newInstance(previousNumber,this);
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, firstFragment);
+//        transaction.addToBackStack(null);
+        transaction.commit();
         // TODO: invoke function which apply changes of the transaction
     }
 
     private void openSecondFragment(int min, int max) {
         // TODO: implement it
+        final Fragment secondFragment = SecondFragment.newInstance(min, max, this);
+        final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, secondFragment);
+//        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    @Override
+    public void sendMinMax(int min, int max) {
+        openSecondFragment(min, max);
+    }
+
+    @Override
+    public void sendPreviousResult(int previousResult) {
+        openFirstFragment(previousResult);
     }
 }

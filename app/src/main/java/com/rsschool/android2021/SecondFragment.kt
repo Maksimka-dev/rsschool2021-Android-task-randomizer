@@ -8,8 +8,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
-class SecondFragment : Fragment() {
+class SecondFragment(sender: SecondFragmentSender) : Fragment() {
 
+    private val senderSecondFragment = sender
     private var backButton: Button? = null
     private var result: TextView? = null
 
@@ -32,21 +33,25 @@ class SecondFragment : Fragment() {
         result?.text = generate(min, max).toString()
 
         backButton?.setOnClickListener {
+            senderSecondFragment.sendPreviousResult(result?.text.toString().toInt())
             // TODO: implement back
         }
     }
 
     private fun generate(min: Int, max: Int): Int {
         // TODO: generate random number
-        return 0
+        return min + max
     }
 
     companion object {
 
         @JvmStatic
-        fun newInstance(min: Int, max: Int): SecondFragment {
-            val fragment = SecondFragment()
+        fun newInstance(min: Int, max: Int, sender: SecondFragmentSender): SecondFragment {
+            val fragment = SecondFragment(sender)
             val args = Bundle()
+            args.putInt(MIN_VALUE_KEY, min)
+            args.putInt(MAX_VALUE_KEY, max)
+            fragment.arguments = args
 
             // TODO: implement adding arguments
 
